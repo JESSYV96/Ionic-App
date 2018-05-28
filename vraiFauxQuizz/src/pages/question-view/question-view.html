@@ -1,0 +1,50 @@
+<ion-header padding>
+  <ion-navbar></ion-navbar>
+  <div class="row">
+    <div class="col">
+        <h2 id="score">Score : {{score}}</h2>
+      </div>
+    
+      <div class="col" 
+           [innerHTML]="imgMarkupLife"
+           ></div>
+  </div>
+</ion-header>
+
+<ion-content>
+    <h3 text-center>
+      {{ question }}
+    </h3>
+ 
+    <div class="answerimg"><img src="{{answerimg}}" ></div>
+    <h4 text-center class="answergood">{{answergood}}</h4>
+</ion-content>
+
+<ion-footer>
+  <h2 class="answerResponse">{{ answertext }}</h2>
+
+  <div [ngStyle]="{'display': display_current === false && questionList.length > 0 ? block : 'none' }">
+      <button ion-button round large class="center-button-next" (click)="nextQuestion()">Question suivante</button>
+  </div>
+
+  <div [ngStyle]="{'display': display_current === false && questionList.length < 0 ? block : 'none' }">
+    <button ion-button round large class="center-button-next" (click)="endOfGame()">Score final</button>
+  </div>
+
+  <div [ngStyle]="{'display': display_current === true ? true : 'none'}" class="row">
+    <div class="col">
+      <button ion-button full color="secondary" (click)="checkResponse(true)">VRAI</button>
+    </div>
+
+    <div class="col" 
+         text-center 
+         [innerHTML]="imgMarkupJoker" 
+         (click)="showAlert()"
+        
+         *ngIf="joker > 0 == true"></div>
+
+    <div class="col">
+        <button ion-button full color="danger" (click)="checkResponse(false);">FAUX</button>
+    </div>
+  </div> 
+</ion-footer> 

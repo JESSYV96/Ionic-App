@@ -1,0 +1,26 @@
+page-question-view {
+    $color-true: #3bd646;
+    $color-wrong: #f42222;
+
+    #score {
+        color: $color-true;     
+    } 
+    .space-leftRight-heart {
+        margin: 0px 8px;
+    }
+    .answerimg {
+        width: 20%;
+        margin: auto;
+        img {
+            width: 100%;
+        }
+    }
+    .answerResponse {
+        text-align: center;
+        
+    }
+    .center-button-next {
+        display: block;
+        margin: auto;
+    }
+}

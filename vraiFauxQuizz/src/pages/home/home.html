@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Application : Vrai - Faux 
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <div>
+    <button ion-button block large (click)="redirectionToQuestionViewPage()">Lancer la partie</button>
+  </div>
+  <div>
+    <button disabled ion-button block large>Classement</button>
+  </div>
+  <div>
+    <button disabled ion-button block large>Poser une question</button>
+  </div>  
+  
+</ion-content>
+
+<ion-footer>
+  <button ion-button large full color="danger" (click)="redirectionToOptionViewPage()">Options</button>
+</ion-footer>
