@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { OptionProvider } from '../../providers/option/option';
 
 
 @IonicPage()
@@ -9,9 +10,18 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 
 export class OptionsViewPage {
-optionList: string[] = ['Facile', 'Intermédiaire', 'Difficile', 'Expert'];
-themeList: string[] = ['Sport', 'Politique'];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) { }
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams,
+    private options: OptionProvider) { }
 
+    difficulties = this.options.difficulties;
+    keys = Object.keys(this.difficulties);
+
+    ionViewDidLoad() {
+      console.log(this.keys);
+      
+      
+    }
 }

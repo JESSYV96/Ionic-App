@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { QuestionListProvider } from '../../providers/question-list/question-list';
 import { Question } from '../../modal/Question';
 import { AlertController } from 'ionic-angular';
+import { Vibration } from '@ionic-native/vibration';
 import { ScoreViewPage } from '../score-view/score-view';
 
 @IonicPage()
@@ -17,6 +18,7 @@ export class QuestionViewPage {
   imgMarkupLife: string = '';
   imgMarkupJoker: string = '';
   question: string;
+  questionListClear: Question[] = this.questions.QuestionsList;
   questionList: Question[] = this.questions.QuestionsList;
   currentQuestion: any = null;
   answerimg: string;
@@ -29,7 +31,8 @@ export class QuestionViewPage {
     public navCtrl: NavController, 
     public navParams: NavParams,
     private questions: QuestionListProvider,
-    private alert: AlertController) { }
+    private alert: AlertController,
+    private vibration: Vibration) { }
 
   // wrongResponse() {
   //   let markup = '';
@@ -61,16 +64,18 @@ export class QuestionViewPage {
     this.questions.joker = this.joker;
     this.imgMarkupJoker = '';
     this.displayJoker();
-    if(this.questions.joker == 0) {
-      
-    }
   }
   displayOneQuestion() {
-      let numRandom = Math.floor(Math.random() * this.questionList.length);
-      let questionRandom = this.questionList[numRandom].getTitle();
-      this.currentQuestion = this.questionList[numRandom];
+    let questionRandom: any = this.questionList;
+    let numRandom = Math.floor(Math.random() * this.questionList.length);    
+    this.currentQuestion = this.questionList[numRandom];
+    if(questionRandom.length > 0) {
+      questionRandom = this.questionList[numRandom].getTitle();
+      return questionRandom;
+    }   
       return questionRandom;
   }
+
   checkResponse(val: boolean) {
     if (val === this.currentQuestion.response) {
       this.answertext = 'Bonne réponse !'
@@ -78,36 +83,26 @@ export class QuestionViewPage {
       this.setScore();
       this.answergood = '';
       this.display_current = false;
+     
     } else {
       this.answertext = 'Mauvaise réponse !'
       this.answerimg = "/assets/imgs/wrong.png";
       this.answergood = this.currentQuestion.getGoodAnswer();
       this.loseLife();
       this.display_current = false;
+      this.vibration.vibrate(300);
     }
+  
   }
   setQuestionList() {
     let questionList = this.questionList;
     let questionListIndex = this.questionList.indexOf(this.currentQuestion);
     let questionListSpliced = questionList.splice(questionListIndex , 1);
-    console.log(questionList);
-    console.log(questionListSpliced);
   }
   setScore() {
     this.score = this.score += 1;
     this.questions.score = this.score;
     return this.questions.score;
-  }
-  
-  colorTrueFalse() {
-    if(this.answertext === 'Bonne réponse !') {
-      console.log('geen');
-
-    } 
-    if(this.answertext === 'Mauvaise réponse !') {
-      console.log('red');
-      
-    }
   }
   nextQuestion() {
     this.setQuestionList()
@@ -121,7 +116,7 @@ export class QuestionViewPage {
         {
           text: 'Boff...',
           handler: () => {
-            console.log('Disagree clicked');
+            
           }
         },
         {
@@ -130,7 +125,6 @@ export class QuestionViewPage {
             this.loseJoker();
             this.setQuestionList();
             this.navCtrl.push(QuestionViewPage);
-            console.log('Agree clicked');
             this.answertext = 'Joker !';
           }
         }
@@ -138,7 +132,6 @@ export class QuestionViewPage {
     });
     alertJoker.present();
   }
-
   gameOver() {
     if(this.life == 0 || this.questionList.length == 0) {
         let alert = this.alert.create({
@@ -147,28 +140,53 @@ export class QuestionViewPage {
             {
               text: 'Voir le score',
               handler: data => {
+
                 this.navCtrl.push(ScoreViewPage);
               }
             },
           ]
         });
         alert.present();
-      
     }
+  }
+
+  giveUp() {
+    let alert = this.alert.create({
+      title: 'Abandonner',
+      subTitle: 'Souhaitez-vous abandonner la partie',
+      buttons: [
+        {
+          text: 'Non t\'es fou',
+          handler: () => {
+            
+          }
+        },
+        {
+          text: 'Ouais, J\'en ai trop marre !',
+          handler: () => {
+            this.navCtrl.popToRoot();
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 
   //Life Cycle
   ionViewDidLoad() {
-  
+
   }
    ionViewWillEnter() {
     this.question = this.displayOneQuestion(); 
     this.displayLife();
     this.displayJoker();
   }
-
+  ionViewWillLeave() {
+   
+  }
   ionViewDidEnter() {
     this.gameOver();
+      
   }
 }
 
